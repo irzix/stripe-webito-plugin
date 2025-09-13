@@ -8,9 +8,7 @@
         "start": "node dist/index.js"
     },
     "dependencies": {
-        "axios": "^1.7.7",
         "node": "^20.18.1",
-        "qs": "^6.13.1",
         "stripe": "^18.5.0",
         "webito-plugin-sdk": "^1.0.28"
     },

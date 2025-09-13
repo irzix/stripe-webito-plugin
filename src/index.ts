@@ -1,8 +1,6 @@
 // plugin.ts
 
-import axios from 'axios';
 import process from 'process';
-import qs from 'qs';
 import { Stripe } from 'stripe';
 import webito, { paymentsCreate_input, paymentsVerify_input } from 'webito-plugin-sdk';
 
