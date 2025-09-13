@@ -1,23 +1,21 @@
-# 🚀 2Checkout Payment Gateway Plugin  
+# 🚀 Stripe Payment Gateway Plugin  
 
-This is an open-source **2Checkout payment integration** for Webito. It allows users to accept secure 2Checkout payments with minimal setup. Simply **activate the plugin**, enter your **2Checkout Merchant ID, Secret Key & Secret Word**, and start processing transactions!  
+This is an open-source **Stripe payment integration** for Webito. It allows users to accept secure Stripe payments with minimal setup. Simply **activate the plugin**, enter your **Stripe Secret Key**, and start processing transactions!  
 
 ## ✨ Features  
-- 🔒 Secure 2Checkout payment processing  
+- 🔒 Secure Stripe payment processing  
 - 🔄 Automatic transaction verification  
 - ⚡ Seamless integration—just activate & configure  
 - 💳 Supports multiple currencies  
 - 🔐 Hash-based security verification
 
 ## 🔧 How It Works  
-1. Activate the plugin in **Webito**.  
-2. Enter your **2Checkout Merchant ID, Secret Key & Secret Word**.  
-3. Customers can now pay via 2Checkout on your site.
+1. Activate the application in **Webito**.  
+2. Enter your **Secret Key**.  
+3. Customers can now pay via Stripe on your site.
 
 ## 📋 Required Configuration
-- **MERCHANT_ID**: Your 2Checkout merchant account ID
-- **SECRET_KEY**: Your 2Checkout secret key for API access
-- **SECRET_WORD**: Your 2Checkout secret word for hash verification
+- **SECRET_KEY**: Your Stripe secret key for API access
 
 ## 🔗 Customization & Forking  
 This plugin is **open-source**! Developers can:  
