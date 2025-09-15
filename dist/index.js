@@ -79,9 +79,9 @@ starter.registerHook(webito_plugin_sdk_1.default.hooks.paymentsCreate, function 
                                     quantity: 1,
                                 },
                             ],
-                            success_url: "".concat(data.callback, "?sid={CHECKOUT_SESSION_ID}"),
-                            cancel_url: "".concat(data.callback, "?canceled=1"),
-                            automatic_tax: { enabled: true },
+                            success_url: "".concat(data.callback),
+                            cancel_url: "".concat(data.callback),
+                            // automatic_tax: { enabled: true }, // اگر Stripe Tax کانفیگ نشده، بردارش
                             client_reference_id: String(data.payment),
                             metadata: {
                                 paymentId: String(data.payment),
@@ -107,7 +107,6 @@ starter.registerHook(webito_plugin_sdk_1.default.hooks.paymentsCreate, function 
                         }];
                 case 2:
                     error_1 = _f.sent();
-                    console.error("2Checkout Payment Error:", error_1);
                     return [2 /*return*/, { status: false, error: error_1 }];
                 case 3: return [2 /*return*/];
             }
@@ -167,7 +166,6 @@ starter.registerHook(webito_plugin_sdk_1.default.hooks.paymentsVerify, function 
                     return [3 /*break*/, 3];
                 case 2:
                     error_2 = _q.sent();
-                    console.error("2Checkout Verification Error:", error_2);
                     return [2 /*return*/, { status: false, error: error_2 }];
                 case 3: return [2 /*return*/];
             }
