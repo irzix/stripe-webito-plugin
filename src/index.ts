@@ -41,9 +41,9 @@ starter.registerHook(
                         quantity: 1,
                     },
                 ],
-                success_url: `${data.callback}?sid={CHECKOUT_SESSION_ID}`,
-                cancel_url: `${data.callback}?canceled=1`,
-                automatic_tax: { enabled: true }, // اگر Stripe Tax کانفیگ نشده، بردارش
+                success_url: `${data.callback}`,
+                cancel_url: `${data.callback}`,
+                // automatic_tax: { enabled: true }, // اگر Stripe Tax کانفیگ نشده، بردارش
                 client_reference_id: String(data.payment), // رفرنس داخلی
                 metadata: {
                     paymentId: String(data.payment),
@@ -68,7 +68,6 @@ starter.registerHook(
             };
 
         } catch (error) {
-            console.error("2Checkout Payment Error:", error);
             return { status: false, error: error };
         }
     }
@@ -134,7 +133,6 @@ starter.registerHook(
             }
 
         } catch (error) {
-            console.error("2Checkout Verification Error:", error);
             return { status: false, error: error };
         }
     }
