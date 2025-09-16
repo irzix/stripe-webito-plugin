@@ -10,13 +10,15 @@
         "test:watch": "jest --watch",
         "test:ci": "jest --runInBand",
         "build:local": "tsc -p tsconfig.json",
-        "run:local": "node dist/scripts/run-local.js"
+        "run:local": "node dist/scripts/run-local.js",
+        "pack:win": "npm run build && powershell -NoProfile -Command \"$zip='plugin.zip'; if (Test-Path $zip) { Remove-Item $zip -Force }; Compress-Archive -Path 'package.json','dist' -DestinationPath $zip -Force\"",
+        "pack:linux": "npm run build && rm -f plugin.zip && zip -r plugin.zip package.json dist"
     },
     "dependencies": {
         "dotenv": "^17.2.2",
         "node": "^20.18.1",
         "stripe": "^18.5.0",
-        "webito-plugin-sdk": "^1.0.28"
+        "webito-plugin-sdk": "^1.0.30"
     },
     "devDependencies": {
         "@types/jest": "^29.5.13",

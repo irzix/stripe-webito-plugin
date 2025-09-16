@@ -1,4 +1,4 @@
-import { runPlugin, starter } from '../src/index';
+import { runPlugin } from '../index';
 import { Stripe } from 'stripe';
 
 jest.mock('stripe', () => {
@@ -16,6 +16,7 @@ describe('paymentsVerify', () => {
     const baseData: any = {
         variables: { SECRET_KEY },
         data: {
+            gateway: { currency: { code: 'EUR' } },
             payment: {
                 transaction: { id: 'cs_test_1' },
                 amount: 10,
@@ -23,6 +24,11 @@ describe('paymentsVerify', () => {
             }
         }
     };
+
+    afterEach(() => {
+        // جلوگیری از لیک شدن لیسنر stdin که در index.js اضافه می‌شود
+        try { (process.stdin as any)?.removeAllListeners?.('data'); } catch {}
+    });
 
     it('status=true', async () => {
         const mockRetrieve = (Stripe as any).mock.instances[0]?.checkout.sessions.retrieve || (Stripe as any).mock.results[0]?.value.checkout.sessions.retrieve;

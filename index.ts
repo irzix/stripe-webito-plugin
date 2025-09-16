@@ -4,7 +4,7 @@ import process from 'process';
 import { Stripe } from 'stripe';
 import webito, { paymentsCreate_input, paymentsVerify_input } from 'webito-plugin-sdk';
 
-const zeroDecimalCurrencies = new Set([
+export const zeroDecimalCurrencies = new Set([
     "BIF", "CLP", "DJF", "GNF", "JPY", "KMF", "KRW", "MGA",
     "PYG", "RWF", "UGX", "VND", "VUV", "XAF", "XOF", "XPF"
 ]);
@@ -20,11 +20,11 @@ export function toStripeAmount(amount: number, currency: string): { value: numbe
 }
 
 
-export const starter = new webito.WebitoPlugin('starter');
+const starter = new webito.WebitoPlugin('starter');
 
 starter.registerHook(
     webito.hooks.paymentsCreate,
-    async ({ variables, data }: { variables: { SECRET_KEY: string, auto_tax: boolean }, data: paymentsCreate_input }) => {
+    async ({ variables, data }: { variables: { SECRET_KEY: string, auto_tax?: boolean }, data: paymentsCreate_input }) => {
         try {
 
             const stripe = new Stripe(variables.SECRET_KEY);
@@ -38,7 +38,7 @@ starter.registerHook(
                             unit_amount: toStripeAmount(data.amount, data.gateway.currency.code).value,
                             product_data: {
                                 name: data?.order?.ordernumber || data?.order?._id || data.payment,
-                                description: data.order.ordernumber ? `Order: ${data.order.ordernumber}` : `Payment ID: ${data.payment}`
+                                description: data?.order?.ordernumber ? `Order: ${data.order.ordernumber}` : `Payment ID: ${data.payment}`
                             },
                         },
                         quantity: 1,
@@ -46,12 +46,12 @@ starter.registerHook(
                 ],
                 success_url: `${data.callback}`,
                 cancel_url: `${data.callback}`,
-                automatic_tax: { enabled: variables.auto_tax ? variables.auto_tax : false },
+                automatic_tax: { enabled: variables?.auto_tax || false },
                 client_reference_id: String(data.payment),
                 metadata: {
                     payment: String(data.payment),
-                    ordernumber: data.order.ordernumber ?? '',
-                    tenant: data?.order?.tenant ?? ''
+                    ordernumber: data?.order?.ordernumber ?? '',
+                    tenant: data?.gateway?.tenant ?? ''
                 },
             }, {
                 idempotencyKey: `pay-${data.payment}`,
@@ -67,11 +67,10 @@ starter.registerHook(
                     payment_intent: session.payment_intent ?? null,
                 },
                 url: session.url,
-                redirect_url: session.url
             };
 
         } catch (error) {
-            return { status: false, error: error };
+            return { status: false, error: error, payload: data , hook : 'verify' };
         }
     }
 );
@@ -101,7 +100,7 @@ starter.registerHook(
             const paidAmount = session.amount_total ?? 0;   // همیشه در واحد کوچک (سنت)
             const paidCurrency = (session.currency ?? '').toUpperCase();
 
-            const expected = toStripeAmount(data.payment.amount, data.payment.currency);
+            const expected = toStripeAmount(data.payment.amount, data.gateway.currency.code);
             const amountsMatch = paidAmount === expected.value && paidCurrency === expected.code;
 
             if (isPaid && amountsMatch) {
@@ -130,7 +129,7 @@ starter.registerHook(
             }
 
         } catch (error) {
-            return { status: false, error: error };
+            return { status: false, error: error, payload: data , hook : 'verify' };
         }
     }
 );
@@ -140,10 +139,8 @@ export const runPlugin = async (inputData: { hook: string; data: any }) => {
     return result;
 };
 
-if (require.main === module) {
-    process.stdin.on('data', async (input) => {
-        const msg = JSON.parse(input.toString());
-        const result: any = await runPlugin(msg);
-        starter.response({ status: result?.status, data: result })
-    });
-}
+process.stdin.on('data', async (input) => {
+    const msg = JSON.parse(input.toString());
+    const result: any = await runPlugin(msg);
+    starter.response({ status: result?.status, data: result })
+});

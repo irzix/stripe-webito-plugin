@@ -1,4 +1,4 @@
-import { runPlugin } from '../src/index';
+import { runPlugin } from '../index';
 import { Stripe } from 'stripe';
 
 jest.mock('stripe', () => {

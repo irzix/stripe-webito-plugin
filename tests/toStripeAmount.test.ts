@@ -1,4 +1,4 @@
-import { toStripeAmount } from '../src/index';
+import { toStripeAmount } from '../index';
 
 describe('toStripeAmount', () => {
     it('باید برای ارز غیر صفر (USD) مقدار را در 100 ضرب کند و گرد کند', () => {
